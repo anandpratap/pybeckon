@@ -36,3 +36,9 @@ class NewtonDD:
             return self.f(self.u[i])
         else:
             return (self.calc(i, j-1) - self.calc(i+1, j))/(self.x[i] - self.x[j])
+
+    def calcu(self,  i, j):
+        if j == i:
+            return self.u[i]
+        else:
+            return self.calcu(i+1, j) - self.calcu(i, j-1)

@@ -26,17 +26,20 @@ class Flux:
         if abs(a-b) > SMALL:
             return (self.func(a) - self.func(b))/(a - b)
         else:
-            return a
+            return 0.0
 
     def __call__(self, u):
         return self.func(u)
 
 class Burgers(Flux):
+    def __init__(self):
+        self.__name__ = "burgers"
 
     def func(self, u):
         return u*u/2.0
 
-
+    def cspeed(self, u):
+        return u
 
 class Advection(Flux):
     
@@ -45,6 +48,12 @@ class Advection(Flux):
         self.__name__ = "advection"
     def func(self, u):
         return self.a*u
+    
+    def cspeed(self, u):
+        if type(u) == float:
+            return self.a
+        else:
+            return self.a*np.ones_like(u)
     
     def actual(self, x, u_init, tf):
         u = np.zeros_like(x)

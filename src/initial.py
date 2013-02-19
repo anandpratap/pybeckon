@@ -11,7 +11,7 @@ class InitialFunction:
         return self.init(x, t=0.0)
 
 class Step(InitialFunction):
-    def init(self, x):
+    def init(self, x, t):
         N = len(x)
         half = int(N/2)
         u = np.zeros_like(x)
@@ -29,12 +29,17 @@ class InvertedStep(InitialFunction):
 
 
 class Square(InitialFunction):
-    def init(self, x):
+    def init(self, x, t):
         N = len(x)
-        quarter = int(N/4)
+        quarter = int(N/8)
         u = np.zeros_like(x)
-        u[quarter:3*quarter] = 1.0
+        u[3*quarter:5*quarter] = 1.0
         return u
+
+class Sin(InitialFunction):
+    def init(self, x, t):
+        return np.sin(np.pi*(x - t))
+
         
 class Complex(InitialFunction):
     def init(self, x, t):
@@ -54,7 +59,7 @@ class Complex(InitialFunction):
         x_[7] = 1.25 + t
         for i in range(N):
             if x[i] >= x_[0] and x[i] < x_[1]:
-                u[i] = x[i] - x_[0]
+                u[i] = (x[i] - x_[0])*4
             elif x[i] >= x_[2] and x[i] < x_[3]:
                 u[i] = (x[i] - x_[2])*(x[i] - x_[3])*15
             elif x[i] >= x_[4] and x[i] < x_[5]:

@@ -28,11 +28,9 @@ class Euler:
         while t < self.tf:
             dt = self.solver.calc_dt()
             residue = self.solver.calc_residue()
-            for i in range(self.solver.N):
-                self.solver.u[i] += residue[i]*dt
+            self.solver.u += residue*dt
             self.pbar.update(t)
             t += dt
-            print "Time: %s"%(t)
         self.savedata()
 
 class CudaEuler:
@@ -78,7 +76,8 @@ class RK2(Euler):
         beta[2,1] = 0.5
         
         t = 0.0
-        while t < self.tf:
+        dt = self.solver.calc_dt()
+        while t + dt < self.tf:
             dt = self.solver.calc_dt()
             u0 = np.copy(self.solver.u)
             residue0 = self.solver.calc_residue()
@@ -86,10 +85,9 @@ class RK2(Euler):
             self.solver.u = u1
             residue1 = self.solver.calc_residue()
             self.solver.u = alpha[2,0]*u0 + beta[2,0]*dt*residue0 + alpha[2,1]*u1 + beta[2,1]*dt*residue1
-            distance = self.solver.f.a*dt
-            N = distance/self.solver.dx
             self.pbar.update(t)
             t += dt
+            
         self.savedata()
             
 class RK4(Euler):
